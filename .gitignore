@@ -1,4 +1,4 @@
-env
+venv_llmops/
 .env
 document_portal.egg-info
 venv/
