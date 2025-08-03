@@ -1,24 +1,23 @@
 faiss_db:
   collection_name: "document_portal"
 
-embeddings_model:
+
+embedding_model:
   provider: "google"
   model_name: "models/text-embedding-004"
 
 retriever:
   top_k: 10
 
-llm_model:
-  provider: "groq"
-  model_name: "deepseek-llama-3.1-8b-instruct"
-  temperature: 0
-  max_tokens: 2048
+llm:
+  groq:
+    provider: "groq"
+    model_name: "deepseek-r1-distill-llama-70b"
+    temperature: 0
+    max_output_tokens: 2048
 
-logging:
-  level: "info"
-  log_file: "app.log"
-  format: "%(asctime)s - %(name)s - %(levelname)s - %(message)s"
-  handlers:
-    - type: "file"
-      filename: "app.log"
-    - type: "console"
+  google:
+    provider: "google"
+    model_name: "gemini-2.0-flash"
+    temperature: 0
+    max_output_tokens: 2048

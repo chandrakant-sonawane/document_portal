@@ -1,6 +1,6 @@
 import sys
 import traceback
-from logger.custom_logger import CustomLogger
+from logger.custom_logger import DualStructLogger
 
 class DocumentPortalException(Exception):
     """Custom exception for Document Portal"""
