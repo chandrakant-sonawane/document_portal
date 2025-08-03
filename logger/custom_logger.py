@@ -1,45 +1,45 @@
-import os
-from datetime import datetime
-import logging
+# import os
+# from datetime import datetime
+# import logging
 
-class CustomLogger:
-    def __init__(self):
-        # Create a logs directory if it doesn't exist
-        self.logs_dir = os.path.join(os.getcwd(), "logs")
-        os.makedirs(self.logs_dir, exist_ok=True)
+# class CustomLogger:
+#     def __init__(self):
+#         # Create a logs directory if it doesn't exist
+#         self.logs_dir = os.path.join(os.getcwd(), "logs")
+#         os.makedirs(self.logs_dir, exist_ok=True)
 
-        # Define the log file path
-        self.LOG_FILE_PATH = os.path.join(self.logs_dir, f"{datetime.now().strftime('%m_%d_%Y_%H_%M_%S')}.log")
+#         # Define the log file path
+#         self.LOG_FILE_PATH = os.path.join(self.logs_dir, f"{datetime.now().strftime('%m_%d_%Y_%H_%M_%S')}.log")
 
-        # Configure the logging
-        logging.basicConfig(
-            filename=self.LOG_FILE_PATH,
-            level=logging.INFO,
-            format="[ %(asctime)s ]- %(name)s - %(levelname)s -%(lineno)d -%(message)s",
-            handlers=[
-                logging.FileHandler(self.LOG_FILE_PATH),
-                logging.StreamHandler()
-            ]
-        )
+#         # Configure the logging
+#         logging.basicConfig(
+#             filename=self.LOG_FILE_PATH,
+#             level=logging.INFO,
+#             format="[ %(asctime)s ]- %(name)s - %(levelname)s -%(lineno)d -%(message)s",
+#             handlers=[
+#                 logging.FileHandler(self.LOG_FILE_PATH),
+#                 logging.StreamHandler()
+#             ]
+#         )
 
-    def get_logger(self, name=__file__):
-        return logging.getLogger(os.path.basename(name))
+#     def get_logger(self, name=__file__):
+#         return logging.getLogger(os.path.basename(name))
 
-    def info(self, message):
-        self.get_logger(__file__).info(message)
+#     def info(self, message):
+#         self.get_logger(__file__).info(message)
 
-    def warning(self, message):
-        self.get_logger(__file__).warning(message)
+#     def warning(self, message):
+#         self.get_logger(__file__).warning(message)
 
-    def error(self, message):
-        self.get_logger(__file__).error(message)
+#     def error(self, message):
+#         self.get_logger(__file__).error(message)
 
-if __name__ == "__main__":
-    # Example usage of the CustomLogger
-    logger = CustomLogger()
-    logger.info("This is an info message.")
-    logger.warning("This is a warning message.")
-    logger.error("This is an error message.")
+# if __name__ == "__main__":
+#     # Example usage of the CustomLogger
+#     logger = CustomLogger()
+#     logger.info("This is an info message.")
+#     logger.warning("This is a warning message.")
+#     logger.error("This is an error message.")
     
     
 # # This code defines a custom logger that writes logs to both a file and the console.
@@ -141,79 +141,79 @@ if __name__ == "__main__":
 
 
 
-# ## This code defines a custom logger using structlog that writes structured logs to both a file and the console.
-# # ## The log files are stored in a 'logs/' directory with timestamped filenames.
-# # ## The logger supports different log levels and formats the log messages consistently.
-# # ## It can be used to log messages at various levels (info, warning, error) and can be easily integrated into other modules.
-# import logging
-# import os
-# import sys
-# from datetime import datetime
-# import structlog
+## This code defines a custom logger using structlog that writes structured logs to both a file and the console.
+# ## The log files are stored in a 'logs/' directory with timestamped filenames.
+# ## The logger supports different log levels and formats the log messages consistently.
+# ## It can be used to log messages at various levels (info, warning, error) and can be easily integrated into other modules.
+import logging
+import os
+import sys
+from datetime import datetime
+import structlog
 
-# class DualStructLogger:
-#     """
-#     A logger using structlog that writes structured logs to both a file and the console.
+class DualStructLogger:
+    """
+    A logger using structlog that writes structured logs to both a file and the console.
 
-#     - File logs include all levels (DEBUG and above).
-#     - Console logs include INFO level and above.
-#     - Log files are stored in a 'logs/' directory with timestamped filenames.
-#     """
+    - File logs include all levels (DEBUG and above).
+    - Console logs include INFO level and above.
+    - Log files are stored in a 'logs/' directory with timestamped filenames.
+    """
 
-#     def __init__(self, logger_name="DualStructLogger"):
-#         """
-#         Initializes the structlog logger with file and console handlers.
+    def __init__(self, logger_name="DualStructLogger"):
+        """
+        Initializes the structlog logger with file and console handlers.
 
-#         Args:
-#             logger_name (str): Name of the logger instance.
-#         """
-#         # Create logs directory
-#         logs_dir = os.path.join(os.getcwd(), "logs")
-#         os.makedirs(logs_dir, exist_ok=True)
+        Args:
+            logger_name (str): Name of the logger instance.
+        """
+        # Create logs directory
+        logs_dir = os.path.join(os.getcwd(), "logs")
+        os.makedirs(logs_dir, exist_ok=True)
 
-#         # Create log file path
-#         log_file = os.path.join(logs_dir, f"{datetime.now().strftime('%Y_%m_%d_%H_%M_%S')}.log")
+        # Create log file path
+        log_file = os.path.join(logs_dir, f"{datetime.now().strftime('%Y_%m_%d_%H_%M_%S')}.log")
 
-#         # Standard logging setup
-#         logging.basicConfig(
-#             level=logging.DEBUG,
-#             format="%(message)s",
-#             handlers=[
-#                 logging.FileHandler(log_file),
-#                 logging.StreamHandler(sys.stdout)
-#             ]
-#         )
+        # Standard logging setup
+        logging.basicConfig(
+            level=logging.DEBUG,
+            format="%(message)s",
+            handlers=[
+                logging.FileHandler(log_file),
+                logging.StreamHandler(sys.stdout)
+            ]
+        )
 
-#         # Structlog configuration
-#         structlog.configure(
-#             processors=[
-#                 structlog.processors.TimeStamper(fmt="iso"),
-#                 structlog.stdlib.add_log_level,
-#                 structlog.stdlib.add_logger_name,
-#                 structlog.processors.StackInfoRenderer(),
-#                 structlog.processors.format_exc_info,
-#                 structlog.processors.JSONRenderer()
-#             ],
-#             context_class=dict,
-#             logger_factory=structlog.stdlib.LoggerFactory(),
-#             wrapper_class=structlog.stdlib.BoundLogger,
-#             cache_logger_on_first_use=True,
-#         )
+        # Structlog configuration
+        structlog.configure(
+            processors=[
+                structlog.processors.TimeStamper(fmt="iso"),
+                structlog.stdlib.add_log_level,
+                structlog.stdlib.add_logger_name,
+                structlog.processors.StackInfoRenderer(),
+                structlog.processors.format_exc_info,
+                structlog.processors.JSONRenderer()
+            ],
+            context_class=dict,
+            logger_factory=structlog.stdlib.LoggerFactory(),
+            wrapper_class=structlog.stdlib.BoundLogger,
+            cache_logger_on_first_use=True,
+        )
 
-#         self.logger = structlog.get_logger(logger_name)
+        self.logger = structlog.get_logger(logger_name)
 
-#     def get_logger(self):
-#         """
-#         Returns the configured structlog logger.
+    def get_logger(self):
+        """
+        Returns the configured structlog logger.
 
-#         Returns:
-#             structlog.stdlib.BoundLogger: The structured logger object.
-#         """
-#         return self.logger
+        Returns:
+            structlog.stdlib.BoundLogger: The structured logger object.
+        """
+        return self.logger
 
-# if __name__ == "__main__":
-#     # Example usage
-#     logger = DualStructLogger().get_logger()
-#     logger.info("Application started", user="admin", action="login")
-#     logger.warning("Low disk space", disk="C:", remaining="500MB")
-#     logger.error("Unhandled exception", error="FileNotFoundError", file="config.yaml")
+if __name__ == "__main__":
+    # Example usage
+    logger = DualStructLogger().get_logger()
+    logger.info("Application started", user="admin", action="login")
+    logger.warning("Low disk space", disk="C:", remaining="500MB")
+    logger.error("Unhandled exception", error="FileNotFoundError", file="config.yaml")
