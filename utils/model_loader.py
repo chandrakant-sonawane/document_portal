@@ -1,5 +1,6 @@
 import os
 import sys
+from typing import Any
 from dotenv import load_dotenv
 from utils.config_loader import load_config
 from langchain_google_genai import GoogleGenerativeAIEmbeddings, ChatGoogleGenerativeAI
@@ -35,41 +36,29 @@ class ModelLoader:
         
     def _validate_env(self):
         """
-        Validate that all required API keys are present in environment variables.
-
-        Required API keys:
-        - GOOGLE_API_KEY: For Google's generative AI services
-        - GROQ_API_KEY: For Groq's language models
-
-        Raises:
-            DocumentPortalException: If any required API keys are missing
+        Validate necessary environment variables.
+        Ensure API keys exist.
         """
-        required_vars = ["GOOGLE_API_KEY", "GROQ_API_KEY"]
-        self.api_keys = {key: os.getenv(key) for key in required_vars}
+        required_vars=["GOOGLE_API_KEY","GROQ_API_KEY"]
+        self.api_keys={key:os.getenv(key) for key in required_vars}
         missing = [k for k, v in self.api_keys.items() if not v]
         if missing:
             log.error("Missing environment variables", missing_vars=missing)
             raise DocumentPortalException("Missing environment variables", sys)
         log.info("Environment variables validated", available_keys=[k for k in self.api_keys if self.api_keys[k]])
-        
-    def load_embeddings(self):
-        """
-        Load and initialize the embedding model from Google's Generative AI.
 
-        Returns:
-            GoogleGenerativeAIEmbeddings: Initialized embedding model
+    def load_embeddings(self) -> Any:
+        """Load embeddings."""
 
-        Raises:
-            DocumentPortalException: If embedding model fails to load
-        """
         try:
             log.info("Loading embedding model...")
-            model_name = self.config["embedding_model"]["model_name"]
-            return GoogleGenerativeAIEmbeddings(model=model_name)
+            embedding_model = self.config.get("embedding_model").get("model_name")
+            return GoogleGenerativeAIEmbeddings(model=embedding_model)
+
         except Exception as e:
-            log.error("Error loading embedding model", error=str(e))
-            raise DocumentPortalException("Failed to load embedding model", sys)
-        
+            log.error(f"Error loading embedding model for {embedding_model}: {str(e)}")
+            raise DocumentPortalException(f"Failed to load embedding model for {embedding_model}: {str(e)}", sys) from e
+
     def load_llm(self):
         """
         Load and initialize the Language Model based on configuration.
