@@ -25,5 +25,5 @@ if __name__ == "__main__":
         a = 1 / 0
     except Exception as e:
         app_exc=DocumentPortalException(e,sys)
-        CustomLogger().error(app_exc)
+        DualStructLogger().error(app_exc)
         raise app_exc
