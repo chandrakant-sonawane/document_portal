@@ -23,7 +23,7 @@ class DocumentHandler:
             self.log.info("DocumentHandler initialized", session_id=self.session_id, session_path=self.session_path)
         except Exception as e:
             self.log.error("Error initializing DocumentHandler", error=str(e))
-            raise DocumentPortalException("Failed to initialize DocumentHandler") from e
+            raise DocumentPortalException("Failed to initialize DocumentHandler", sys)
 
     def save_pdf(self, uploaded_file):
         try:
@@ -37,7 +37,7 @@ class DocumentHandler:
             return save_path
         except Exception as e:
             self.log.error("Error saving PDF", error=str(e))
-            raise DocumentPortalException("Failed to save PDF") from e
+            raise DocumentPortalException("Failed to save PDF", sys)
 
     def read_pdf(self, pdf_path: str) -> str:
         try:
@@ -51,7 +51,7 @@ class DocumentHandler:
             return text
         except Exception as e:
             self.log.error("Error reading PDF", error=str(e))
-            raise DocumentPortalException("Failed to read PDF") from e
+            raise DocumentPortalException("Failed to read PDF", sys)
 
 if __name__ == "__main__":
     handler = DocumentHandler()
